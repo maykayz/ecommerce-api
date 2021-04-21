@@ -1,0 +1,107 @@
+const User = require('../models/user')
+const {errorHandler} = require('../helpers/dbErrorHandler')
+
+//@desc			Get User List
+//@route		GET /api/v1/users/
+//@access		Private
+
+exports.getUsers = (req,res) => {
+	User.find()
+	.select("-hashed_password -salt -__v")
+	.exec((err,users) => {
+		if(!users || err){
+			return res.status(400).json({
+				error: errorHandler(err)
+			})
+		}
+		return res.status(200).json({
+			success:true,
+			data: users
+		})
+	})
+}
+
+
+//@desc			Get User
+//@route		GET /api/v1/users/:id
+//@access		Private
+
+exports.getUser = (req,res) => {
+	const {id} = req.params
+	User.findOne({_id:id})
+	.select("-hashed_password -salt -__v")
+	.exec((err,user) => {
+		if(!user || err){
+			return res.status(400).json({
+				error: errorHandler(err)
+			})
+		}
+		return res.status(200).json({
+			success:true,
+			data: user
+		})
+	})
+}
+
+
+//@desc			Create User
+//@route		POST /api/v1/users/
+//@access		Private
+
+exports.createUser = (req,res) => {
+	const user =  new User(req.body)
+	user.save((err,user) => {
+		if(err){
+			res.status(400).json({
+				error: errorHandler(err)
+			})
+		}else{
+			res.status(200).json({
+				success:true,
+				data: user,
+				message: 'User created successfully!'
+			})
+		}
+	})
+}
+
+
+//@desc			Update User
+//@route		PUT /api/v1/users/:id
+//@access		Private
+
+exports.updateUser = (req,res) => {
+	User.findOneAndUpdate({_id:req.params.id},req.body,{ new: true },(err,user) => {
+		if(err){
+			res.status(400).json({
+				error: errorHandler(err)
+			})
+		}else{
+			res.status(200).json({
+				success:true,
+				data: user,
+				message: 'User updated successfully!'
+			})
+		}
+	})
+}
+
+
+//@desc			Delete User
+//@route		DELETE /api/v1/users/:id
+//@access		Private
+
+exports.deleteUser = (req,res) => {
+	User.findByIdAndDelete({_id:req.params.id},(err,user) => {
+		if(err){
+			res.status(400).json({
+				error: errorHandler(err)
+			})
+		}else{
+			res.status(200).json({
+				success:true,
+				message: 'User deleted successfully!'
+			})
+		}
+	})
+}
