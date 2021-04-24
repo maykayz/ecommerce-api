@@ -50,6 +50,7 @@ exports.getProducts = (req,res) => {
 			products.forEach(item => {
 				if(item.photo.data){
 					item.url = `${process.env.SERVER}${req.baseUrl}/${item._id}/photo`
+					item.photo = undefined
 				}
 			})
 			res.status(200).json({
@@ -77,8 +78,7 @@ exports.getRelatedProducts = (req,res) => {
 	let order = req.query.orderBy ? req.query.orderBy : 'asc'
 	let limit = req.query.limit ? parseInt(req.query.limit) : '10'
 
-	Product.find({_id:{$ne:id},category:category})
-	.select("-photo")
+	Product.find({_id:{$ne:id},category:category._id})
 	.populate("category")
 	.populate("brand")
 	.sort([[sort,order]])
@@ -88,6 +88,12 @@ exports.getRelatedProducts = (req,res) => {
 				error: errorHandler(err)
 			})
 		}else{
+			products.forEach(item => {
+				if(item.photo.data){
+					item.url = `${process.env.SERVER}${req.baseUrl}/${item._id}/photo`
+					item.photo = undefined
+				}
+			})
 			return res.status(200).json({
 				success:true,
 				total: products.length,
@@ -140,6 +146,10 @@ exports.showProduct = (req,res) => {
 		return res.status(400).json({
 			error: 'Product Not Found'
 		})
+	}
+	if(req.product.photo.data){
+		req.product.photo = undefined
+		req.product.url = `${process.env.SERVER}${req.baseUrl}/${req.product._id}/photo`
 	}
 	return res.status(200).json({
 		success:true,
@@ -335,7 +345,7 @@ exports.listBySearch = (req, res) => {
 	};
 
 	Object.keys(req.body.filters).forEach(key => {
-			if(key !== "price" && key !== "order" && key !== "orderBy" && key !== "currentPage" && key !== "sortBy" && key !== "limit" && key !== "skip" && key !== "page" && key !== "row"){
+			if(key !== "price" && key !== "keyword" && key !== "order" && key !== "orderBy" && key !== "currentPage" && key !== "sortBy" && key !== "limit" && key !== "skip" && key !== "page" && key !== "row"){
 				if(req.body.filters[key].length > 0){
 					findArgs[key] = []
 					req.body.filters[key].forEach(item => {
@@ -343,13 +353,20 @@ exports.listBySearch = (req, res) => {
 					})
 				}
 
-			}else if (key === "price" && req.body.filters[key].length){
+			}
+			if(key === "price" && req.body.filters[key].length){
 				const value = req.body.filters[key].split(',')
 				if(value.length){
 					let price = {}
 					if (value[0]) price.$gte = parseInt(value[0])
 					if (value[1]) price.$lte = parseInt(value[1])
 					if (price) findArgs.price = price
+				}
+			}
+			if(key === "keyword"){
+				findArgs.name = {
+					$regex: req.body.filters.keyword,
+					$options: 'i'
 				}
 			}
 	})
