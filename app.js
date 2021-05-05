@@ -25,6 +25,8 @@ const userRoutes = require('./routes/user')
 const categoryRoutes = require('./routes/category')
 const brandRoutes = require('./routes/brand')
 const productRoutes = require('./routes/product')
+const brainttreeRoutes = require('./routes/braintree')
+const orderRoutes = require('./routes/order')
 
 
 // DATABASE CONNECTION
@@ -58,6 +60,8 @@ app.use(`${prefix}/users`,userRoutes)
 app.use(`${prefix}/categories`,categoryRoutes)
 app.use(`${prefix}/brands`,brandRoutes)
 app.use(`${prefix}/products`,productRoutes)
+app.use(`${prefix}/braintree`,brainttreeRoutes)
+app.use(`${prefix}/orders`,orderRoutes)
 
 
 // PROCESS
