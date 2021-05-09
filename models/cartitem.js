@@ -7,7 +7,7 @@ const CartItem = new mongoose.Schema(
     product: { type: ObjectId, ref: "Product" },
     name: String,
     price: Number,
-	discount_price: Number,
+	  discount_price: Number,
     count: Number
   },
   { timestamps: true }

@@ -30,6 +30,7 @@ exports.getUser = (req,res) => {
 	const {id} = req.params
 	User.findOne({_id:id})
 	.select("-hashed_password -salt -__v")
+	.populate({path:'history', model:"Order"})
 	.exec((err,user) => {
 		if(!user || err){
 			return res.status(400).json({
@@ -101,6 +102,33 @@ exports.deleteUser = (req,res) => {
 			res.status(200).json({
 				success:true,
 				message: 'User deleted successfully!'
+			})
+		}
+	})
+}
+
+
+//@desc			Add User Order History
+//@route		PUT /api/v1/users/:id/history
+//@access		Private
+
+exports.updateOrderHistory = (req,res,next) => {
+	const order = req.order
+	User.findOneAndUpdate(
+		{_id:order.user},
+		{ $push: { history: order } },
+		{safe: true, upsert: true, new : true},
+		(err,user) => {
+			console.log(err,user)
+		if(err){
+			res.status(400).json({
+				error: errorHandler(err)
+			})
+		}else{
+			res.status(200).json({
+				success:true,
+				data: order,
+				message: 'Order Created successfully!'
 			})
 		}
 	})

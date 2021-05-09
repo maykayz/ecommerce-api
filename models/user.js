@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const crypto = require('crypto')
 const uuid = require('uuid')
 const {timeStamp} = require('console')
+const {ObjectId} = mongoose.Schema
 
 const user = new mongoose.Schema({
 	name: {
@@ -27,9 +28,10 @@ const user = new mongoose.Schema({
 		default: 1
 	},
 	history: {
-		type: Array,
+		type: [ObjectId],
+		ref: 'Order',
 		default: []
-	}
+	},
 },{timestamps: true})
 
 // virtual field

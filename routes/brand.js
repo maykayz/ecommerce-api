@@ -6,7 +6,7 @@ const {isAuth,isAdmin} = require('../middleware/auth')
 const { createBrandValidator } = require('../validators/index')
 
 router.post('/', isAuth,isAdmin,createBrandValidator,createBrand)
-router.get('/', isAuth,getBrands)
+router.get('/',getBrands)
 router.get('/:id',getBrand)
 router.put('/:id',isAuth,isAdmin,createBrandValidator,updateBrand)
 router.delete('/:id',isAuth,isAdmin,deleteBrand)

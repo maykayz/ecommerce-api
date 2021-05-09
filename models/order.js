@@ -20,16 +20,33 @@ const order = mongoose.Schema({
 		ref: 'User',
 		required: true
 	},
-	shippingAddress: {
-		type: String,
-		required: true,
-		maxlength: 2000,
-		trim: true
+	shipping: {
+		address: {
+			type: String,
+			required: true,
+			maxlength: 2000,
+			trim: true
+		},
+		zipcode: {
+			type: String,
+			required: true,
+			trim: true
+		},
+		address: {
+			type: String,
+			required: true,
+			trim: true
+		},
 	},
 	status: {
 		type: String,
 		default: "New",
 		enum: ["New", "Processing", "Shipped", "Delivered", "Cancelled"]
+	},
+	payment_type: {
+		type: String,
+		default: "New",
+		enum: ["COD", "Master/Visa", "Paypal"]
 	},
 	transaction_id: {},
 	transaction_amount: {

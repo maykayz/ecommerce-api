@@ -10,20 +10,30 @@ const e = require('express');
 //@access		Private (User)
 //@query		sortBy,orderBy,limit		
 
-exports.createOrder = (req,res) => {
+exports.createOrder = (req,res,next) => {
 	const order = new Order(req.body);
-	console.log(order)
 	order.save((err,order) => {
 		if(err){
-			console.log(err)
 			res.status(500).json({
+				error: errorHandler(err)
+			})
+		}else{
+			req.order = order
+			next()
+		}
+	})
+}
+
+exports.getOrders = (req,res) => {
+	Order.find({},(err,orders) => {
+		if(err){
+			res.status(400).json({
 				error: errorHandler(err)
 			})
 		}else{
 			res.status(200).json({
 				success:true,
-				data: order,
-				message: 'Order created successfully!'
+				data: orders
 			})
 		}
 	})

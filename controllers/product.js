@@ -273,6 +273,37 @@ exports.updateProduct = (req,res) => {
 	})
 }
 
+//@desc			Update Product
+//@route		POST /api/v1/products/:id
+//@access		Private
+
+exports.updateSoldQty = (req,res,next) => {
+	var bulkOps = req.order.items.map(item => {
+		return {
+			 updateOne : {
+				"filter" : { "_id" : item._id },
+				"update" : { 
+					$inc: {
+						sold: +item.count,
+						quantity: -item.count
+					} 
+				}
+			 } ,
+		}
+	})
+	
+	Product.bulkWrite(bulkOps,{}, (err,result) => {
+		if(err){
+			return res.status(400).json({
+				error: 'Error Updating Quantity'
+			})
+		}else{
+			next()
+		}
+	})
+}
+
+
 
 //@desc			Delete Product
 //@route		DELETE /api/v1/products/:id
@@ -370,7 +401,6 @@ exports.listBySearch = (req, res) => {
 				}
 			}
 	})
-	console.log(findArgs)
 
 		Product.count(findArgs,(err,count) => {
 			total =  count
