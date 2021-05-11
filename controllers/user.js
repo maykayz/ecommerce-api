@@ -37,6 +37,13 @@ exports.getUser = (req,res) => {
 				error: errorHandler(err)
 			})
 		}
+		if(!user.contact_info){
+			user.contact_info = {
+				address: '',
+				phone: '',
+				zipcode: ''
+			}
+		}
 		return res.status(200).json({
 			success:true,
 			data: user

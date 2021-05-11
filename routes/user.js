@@ -5,7 +5,7 @@ const { getUsers, createUser, getUser, updateUser, deleteUser} = require('../con
 const { isAuth, isAdmin } = require('../middleware/auth')
 const { userSignUpValidator } = require('../validators/index')
 
-router.put('/:id',isAuth, isAdmin, updateUser)
+router.put('/:id',isAuth, updateUser)
 router.delete('/:id',isAuth,isAdmin,deleteUser)
 router.get('/', isAuth,isAdmin, getUsers)
 router.post('/', isAuth, isAdmin, userSignUpValidator, createUser)

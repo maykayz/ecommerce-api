@@ -18,6 +18,21 @@ const user = new mongoose.Schema({
 		required: true,
 		unique: true
 	},
+	contact_info: {
+		address: {
+			type: String,
+			trim: true,
+			default: ''
+		},
+		phone: {
+			type: String,
+			default: ''
+		},
+		zipcode: {
+			type: Number,
+			default: null
+		}
+	},
 	hashed_password: {
 		type: String,
 		required: true,
