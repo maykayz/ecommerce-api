@@ -20,18 +20,12 @@ exports.getProducts = (req,res) => {
 	let page = req.query && req.query. page ?  parseInt(req.query.page) : 1
 	let skip = page > 1 ? (page-1) * limit : 0
 	let total = 0;
+	let total_page = 0
 
 	Product.count({},(err,count) => {
-		total =  count
+		total = count
+		total_page = Math.ceil(total/limit)
 	});	
-
-	const getTotalPage = () => {
-		let totalPage = 0;
-		let full = total/limit
-		let point = total%limit 
-		totalPage
-		return totalPage
-	}
 
 	Product.find() 
 	//.select("-photo")
@@ -57,7 +51,7 @@ exports.getProducts = (req,res) => {
 				success:true,
 				currentPage: page,
 				total: total,
-				totalPage: getTotalPage(),
+				totalPage: total_page,
 				data: products
 			})
 		}
@@ -363,14 +357,7 @@ exports.listBySearch = (req, res) => {
 
 	let skip = page > 1 ? (page-1) * limit : 0
 	let total = 0;
-
-	const getTotalPage = () => {
-		let totalPage = 0;
-		let full = total/limit
-		let point = total%limit 
-		totalPage
-		return totalPage
-	}
+	let total_page = 0;
 
     let findArgs = {
 	};
@@ -402,8 +389,9 @@ exports.listBySearch = (req, res) => {
 			}
 	})
 
-		Product.count(findArgs,(err,count) => {
-			total =  count
+		Product.count({},(err,count) => {
+			total = count
+			total_page = Math.ceil(total/limit)
 		});	
 
 		Product.find(findArgs)
@@ -429,7 +417,7 @@ exports.listBySearch = (req, res) => {
 					success:true,
 					currentPage: page,
 					total: total,
-					totalPage: getTotalPage(),
+					totalPage: total_page,
 					data: products
 				})
 			}
