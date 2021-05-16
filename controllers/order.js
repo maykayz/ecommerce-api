@@ -35,10 +35,9 @@ exports.createOrder = (req,res,next) => {
 exports.getOrders = (req,res) => {
 
 	let filters = req.query ? req.query : {}
-	console.log(filters)
 	let order 	= filters.order 		? filters.order 						: "desc";
     let sortBy 	= filters.sortBy 		? filters.sortBy 						: "createdAt";
-    let limit 	= filters.limit 		? parseInt(filters.limit) 				: 100;
+    let limit 	= filters.limit 		? parseInt(filters.limit) 				: 10;
 	let page 	= filters.currentPage 	? parseInt(filters.currentPage) 		: 1;
 	let row 	= filters.row 			? parseInt(filters.row) 				: 10;
 
@@ -80,6 +79,7 @@ exports.getOrders = (req,res) => {
 	.sort([[sortBy, order]])
 	.skip(skip)
 	.limit(limit)
+	.populate('user',"_id name contact_info")
 	.exec((err, orders) => {
 		if(err || !orders){
 			return res.status(400).json({
@@ -92,6 +92,7 @@ exports.getOrders = (req,res) => {
 				currentPage: page,
 				total: total,
 				totalPage: total_page,
+				limit: limit,
 				data: orders
 			})
 		}
