@@ -30,14 +30,18 @@ const orderRoutes = require('./routes/order')
 
 
 // DATABASE CONNECTION
+const connection = "mongodb+srv://mayk:homhe5-bibkyk-dudsUb@cluster0.is6ns.mongodb.net/moony?retryWrites=true&w=majority";
+mongoose.connect(connection,{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
+    .then(() => console.log("Database Connected Successfully"))
+    .catch(err => console.log(err));
 
-mongoose.connect(process.env.DATABASE,{
-	useNewUrlParser:true,
-	useCreateIndex: true,
-	useUnifiedTopology: true
-}).then(() => {
-	console.log("Mongo connected")
-})
+// mongoose.connect(process.env.DATABASE,{
+// 	useNewUrlParser:true,
+// 	useCreateIndex: true,
+// 	useUnifiedTopology: true
+// }).then(() => {
+// 	console.log("Mongo connected")
+// })
 
 
 // MIDDLEWARES
