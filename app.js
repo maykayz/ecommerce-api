@@ -51,8 +51,8 @@ app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(expressValidator())
 const corsOptions = {
-    credentials: true,
-    origin: "http://localhost:3000"
+    // credentials: true,
+    // origin: "http://localhost:3000"
   };
 app.use(cors(corsOptions));
 
