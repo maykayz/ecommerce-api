@@ -53,7 +53,7 @@ app.use(expressValidator())
 const corsOptions = {
     credentials: true,
     // origin: "http://localhost:3000"
-    origin: "https://moony-ecommerce.netlify.app"
+    origin: '*'
   };
 app.use(cors(corsOptions));
 
