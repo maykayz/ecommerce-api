@@ -69,8 +69,6 @@ app.use(cors({
   }
 }));
 
-app.use(cors(corsOptions));
-
 
 // USE ROUTE MODULES
 
