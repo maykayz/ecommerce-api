@@ -30,18 +30,18 @@ const orderRoutes = require('./routes/order')
 
 
 // DATABASE CONNECTION
-const connection = "mongodb+srv://mayk:homhe5-bibkyk-dudsUb@cluster0.is6ns.mongodb.net/moony?retryWrites=true&w=majority";
-mongoose.connect(connection,{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
-    .then(() => console.log("Database Connected Successfully"))
-    .catch(err => console.log(err));
+// const connection = "mongodb+srv://mayk:homhe5-bibkyk-dudsUb@cluster0.is6ns.mongodb.net/moony?retryWrites=true&w=majority";
+// mongoose.connect(connection,{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
+//     .then(() => console.log("Database Connected Successfully"))
+//     .catch(err => console.log(err));
 
-// mongoose.connect(process.env.DATABASE,{
-// 	useNewUrlParser:true,
-// 	useCreateIndex: true,
-// 	useUnifiedTopology: true
-// }).then(() => {
-// 	console.log("Mongo connected")
-// })
+mongoose.connect(process.env.DATABASE,{
+	useNewUrlParser:true,
+	useCreateIndex: true,
+	useUnifiedTopology: true
+}).then(() => {
+	console.log("Mongo connected")
+})
 
 
 // MIDDLEWARES
@@ -50,25 +50,31 @@ app.use(express.json()).use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(expressValidator())
-var allowedOrigins = [
-                      'http://localhost:3000',
-                      'http://moony-ecommerce.netlify.app',
-                      'http://60a3250dcfa6ee1c71b4fa91--moony-ecommerce.netlify.app',
-                    ];
-app.use(cors({
-  origin: function(origin, callback){
-    // allow requests with no origin 
-    // (like mobile apps or curl requests)
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
-      var msg = 'The CORS policy for this site does not ' +
-                'allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  }
-}));
+// var allowedOrigins = [
+//                       'http://localhost:3000',
+//                       'http://moony-ecommerce.netlify.app',
+//                       'http://60a3250dcfa6ee1c71b4fa91--moony-ecommerce.netlify.app',
+//                     ];
+// app.use(cors({
+//   origin: function(origin, callback){
+//     // allow requests with no origin 
+//     // (like mobile apps or curl requests)
+//     if(!origin) return callback(null, true);
+//     if(allowedOrigins.indexOf(origin) === -1){
+//       var msg = 'The CORS policy for this site does not ' +
+//                 'allow access from the specified Origin.';
+//       return callback(new Error(msg), false);
+//     }
+//     return callback(null, true);
+//   }
+// }));
 
+var corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions))
 
 // USE ROUTE MODULES
 
